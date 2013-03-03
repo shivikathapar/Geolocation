@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style type="text/css">
+  html { height: 5o% }
+  body { height: 50%; margin: 0px; padding: 0px }
+  #map_canvas { height: 50% }
+</style>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true">
+</script>
+<script type="text/javascript">
+
+
+function findMyCurrentLocation() {
+	var geoService = navigator.geolocation;
+	if (geoService) {
+		geoService.getCurrentPosition(showCurrentLocation,errorHandler,{enableHighAccuracy: true});
+	} else {
+		alert("Your Browser does not support GeoLocation.");
+	}
+}
+
+function showCurrentLocation(position){
+var x=document.getElementById("demo");
+
+	//Convert position --> Lat/Lon object
+	var latLng = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+		x.innerHTML="Latitude: " + position.coords.latitude + 
+  "<br>Longitude: " + position.coords.longitude; 
+    
+
+	//Google Map options
+	var myOptions = {
+		      zoom: 12,
+		      center: latLng,
+		      mapTypeId: google.maps.MapTypeId.ROADMAP
+		    };
+
+    //Create the Google Map
+	var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+
+    //Plot where the user is via a Marker
+	var usermarker = new google.maps.Marker({
+										position: latLng,
+										map: map,
+										title: "You are here!"
+										});
+
+	map.setCenter(latLng);
+	usermarker.setPosition(latLng);
+
+}
+
+function errorHandler(error){
+	  alert("Error while retrieving current position. Error code: " + error.code + ",Message: " + error.message);
+}
+</script>
+</head>
+<body>
+<input type="button" onclick="findMyCurrentLocation();"  
+                             value="Get Location"/>
+
+
+<p id="demo"></p>
+<div id="map_canvas" style="height:500px;width:800px;"></>
+</body>
+</html>
